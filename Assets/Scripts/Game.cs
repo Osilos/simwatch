@@ -7,7 +7,7 @@ public class Game
     private GameScreen gameScreen;
     private TransitionScreen transitionScreen;
     private List<int> currentSequence;
-    private int difficulty = 0;
+    private int difficulty = 1;
 
     public Game(GameScreen gameScreen, TransitionScreen transitionScreen)
     {
@@ -22,7 +22,7 @@ public class Game
 
     private void SetupNextSequence()
     {
-        currentSequence = GetNewNextSequence(++difficulty);
+        currentSequence = GetNewNextSequence(difficulty);
         gameScreen.PlaySequence(currentSequence);
         gameScreen.OnColorClicked += GameScreen_OnColorClicked;
     }
@@ -39,6 +39,9 @@ public class Game
 
     private void GameScreen_OnColorClicked(GameScreen sender, int colorIndex)
     {
+        if (currentSequence.Count == 0)
+            return;
+
         if (currentSequence[0] == colorIndex)
         {
             currentSequence.RemoveAt(0);
@@ -59,8 +62,6 @@ public class Game
     {
         gameScreen.OnColorClicked -= GameScreen_OnColorClicked;
     }
-
-
 
 
     private const string HIGHSCORE_KEY = "Highscore";

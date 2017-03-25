@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public delegate void GameSceenColorClickEventHandler(GameScreen sender, int colorIdClicked);
 
 public class GameScreen : CanvasScreen
 {
     [SerializeField] private List<Button> buttons = new List<Button>();
+    [SerializeField] private Button rotationButton;
+    [SerializeField] private Rotator rotator;
+    [SerializeField] private float rotationSecondsDuration;
+
 
     public int ColorCount {
         get
@@ -21,8 +26,14 @@ public class GameScreen : CanvasScreen
     private void Start () {
         for (int i = buttons.Count -1; i >= 0; i--)
             AddButtonClickListener(buttons[i], i);
+
+        rotationButton.onClick.AddListener(RotationButton_OnClicked);
     }
 
+    private void RotationButton_OnClicked()
+    {
+        rotator.Rotate(Quaternion.AngleAxis(90 * (Random.value > 0.5 ? -1 : 1), Vector3.forward) * rotator.transform.rotation, rotationSecondsDuration);
+    }
 
     private void AddButtonClickListener(Button button, int index)
     {
