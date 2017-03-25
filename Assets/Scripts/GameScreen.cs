@@ -55,7 +55,7 @@ public class GameScreen : CanvasScreen
 
     private void RotationButton_OnClicked()
     {
-        rotator.Rotate(Quaternion.AngleAxis(90 * (Random.value > 0.5 ? -1 : 1), Vector3.forward) * rotator.transform.rotation, rotationSecondsDuration);
+        rotator.Rotate(Quaternion.AngleAxis(90 * Random.Range(1, 4), Vector3.forward) * rotator.transform.rotation, rotationSecondsDuration);
     }
 
     private void AddButtonClickListener(Button button, int index)
