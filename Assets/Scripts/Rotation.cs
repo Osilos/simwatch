@@ -1,29 +1,28 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rotation : MonoBehaviour {
 
-    [SerializeField]
-    private GameObject Board;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void Rotate ()
+    public void Rotate (float duration = 0.5f)
     {
-        Board.transform.Rotate(Vector3.forward, 90f * (Random.value > 0.5 ? -1 : 1));
+        StartCoroutine(RotateCoroutine(duration));
     }
 
-   // private IEnumerator RotateRoutine ()
-   // {
+    private IEnumerator RotateCoroutine(float duration)
+    {
+        Quaternion finalRotation = Quaternion.AngleAxis(90 * (Random.value > 0.5 ? -1 : 1), Vector3.forward) * transform.rotation;
+        Quaternion initialRotation = transform.rotation;
+        float counter = 0;
 
-   // }
+        while (counter < duration)
+        {
+            counter += Time.deltaTime;
+
+            transform.rotation = Quaternion.Slerp(initialRotation, finalRotation, counter / duration);
+
+            yield return null;
+        }
+
+        transform.rotation = finalRotation;
+    }
 }

@@ -4,12 +4,14 @@ using UnityEngine;
 public class Game
 {
     private GameScreen gameScreen;
+    private TransitionScreen transitionScreen;
     private List<int> currentSequence;
     private int difficulty = 0;
 
-    public Game(GameScreen gameScreen)
+    public Game(GameScreen gameScreen, TransitionScreen transitionScreen)
     {
-        this.gameScreen = gameScreen;
+        this.gameScreen       = gameScreen;
+        this.transitionScreen = transitionScreen;
     }
 
     public void Start()
@@ -55,5 +57,18 @@ public class Game
     public void Destroy()
     {
         gameScreen.OnColorClicked -= GameScreen_OnColorClicked;
+    }
+
+
+
+
+    private const string HIGHSCORE_KEY = "Highscore";
+    public static int GetHighscore()
+    {
+        return PlayerPrefs.GetInt(HIGHSCORE_KEY, 0);
+    }
+    public static void SetHighscore(int score)
+    {
+        PlayerPrefs.SetInt(HIGHSCORE_KEY, score);
     }
 }
