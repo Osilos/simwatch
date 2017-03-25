@@ -1,7 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Rotator : MonoBehaviour {
+    public Quaternion LastTargetedRotation { get; private set; }
+
+    private void Awake()
+    {
+        LastTargetedRotation = transform.rotation;
+    }
 
     public void Rotate (Quaternion targetedRotation, float duration = 0f)
     {
@@ -10,6 +17,7 @@ public class Rotator : MonoBehaviour {
 
     private IEnumerator RotateCoroutine(Quaternion targetedRotation, float duration)
     {
+        LastTargetedRotation = targetedRotation;
         Quaternion initialRotation = transform.rotation;
         float counter = 0;
 
