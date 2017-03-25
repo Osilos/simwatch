@@ -14,6 +14,7 @@ public class GameScreen : CanvasScreen
     [SerializeField] private Rotator rotator;
     [SerializeField] private float rotationSecondsDuration;
     [SerializeField] private float blinkSecondsDuration = 0.3f;
+    [SerializeField] private GameObject error;
 
     private bool _enableClick = true;
     public bool EnableClick
@@ -45,6 +46,11 @@ public class GameScreen : CanvasScreen
             AddButtonClickListener(buttons[i], i);
 
         rotationButton.onClick.AddListener(RotationButton_OnClicked);
+    }
+
+    public void SetErrorVisible(bool isVisible)
+    {
+        error.SetActive(isVisible);
     }
 
     private void RotationButton_OnClicked()

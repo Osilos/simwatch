@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class TitleScreen : CanvasScreen
@@ -27,8 +29,27 @@ public class TitleScreen : CanvasScreen
         {
             transitionScreen.CloseTransitToLeft();
             gameScreen.OpenTransitFromRight();
-            new Game(gameScreen, transitionScreen).Start();
+            Game game = new Game(gameScreen, transitionScreen);
+            game.OnLoosed += Game_OnLoosed;
+            game.Start();
         });
+    }
+
+    private void Game_OnLoosed(Game sender)
+    {
+        sender.Destroy();
+        gameScreen.EnableClick = false;
+        gameScreen.StartCoroutine(GameOverCoroutine());
+    }
+
+    private IEnumerator GameOverCoroutine()
+    {
+        gameScreen.SetErrorVisible(true);
+        yield return new WaitForSeconds(2);
+        gameScreen.SetErrorVisible(false);
+
+        gameScreen.CloseTransitToLeft();
+        OpenTransitFromRight();
     }
 
     private void OnDestroy()

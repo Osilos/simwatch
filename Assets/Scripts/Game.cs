@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+public delegate void GameEventHandler(Game sender);
 
 public class Game
 {
@@ -9,6 +10,8 @@ public class Game
     private List<int> currentSequence;
     private int difficulty = 1;
     public bool IsStarted { get; private set; }
+
+    public event GameEventHandler OnLoosed;
 
     public Game(GameScreen gameScreen, TransitionScreen transitionScreen)
     {
@@ -54,16 +57,18 @@ public class Game
         if (currentSequence[0] == colorIndex)
         {
             currentSequence.RemoveAt(0);
+
             if (currentSequence.Count == 0)
             {
-                Debug.ClearDeveloperConsole();
-                Debug.Log("You WIN");
+                if (GetHighscore() < difficulty)
+                    SetHighscore(difficulty);
+
                 transitionScreen.OpenShowSequenceAndClose(++difficulty, SetupNextSequence);
             }
         }
-        else
+        else if (OnLoosed != null)
         {
-            Debug.Log("YOU LOSE !!!");
+            OnLoosed(this);
         }
     }
 
