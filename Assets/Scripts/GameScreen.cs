@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +13,23 @@ public class GameScreen : CanvasScreen
     [SerializeField] private Button rotationButton;
     [SerializeField] private Rotator rotator;
     [SerializeField] private float rotationSecondsDuration;
+    [SerializeField] private float blinkSecondsDuration = 0.3f;
 
+    private bool _enableClick = true;
+    public bool EnableClick
+    {
+        get
+        {
+            return _enableClick;
+        }
+        set
+        {
+            _enableClick = value;
+            
+            for (int i = buttons.Count-1; i > -1; i--)
+                buttons[i].interactable = value;
+        }
+    }
 
     public int ColorCount {
         get
@@ -43,23 +60,30 @@ public class GameScreen : CanvasScreen
         });
     }
 
-    public void PlaySequence(List<int> sequence)
+    public void PlaySequence(List<int> sequence, Action actionOnEnd = null)
     {
-        StartCoroutine(PlaySequenceCoroutine(sequence));
+        StartCoroutine(PlaySequenceCoroutine(sequence, actionOnEnd));
     }
 
-    private IEnumerator PlaySequenceCoroutine(List<int> sequence)
+    private IEnumerator PlaySequenceCoroutine(List<int> sequence, Action actionOnEnd = null)
     {
         foreach (int index in sequence)
             yield return BlinkButton(buttons[index]);
+
+        if (actionOnEnd != null)
+            actionOnEnd();
     }
 
     private IEnumerator BlinkButton (Button button)
     {
         yield return new WaitForSeconds(0.2f);
-        Color currentColor = button.image.color;
-        button.image.color = Color.white;
-        yield return new WaitForSeconds(0.3f);
-        button.image.color = currentColor;
+        ColorBlock initialColorBlock = button.colors;
+        ColorBlock newColorBlock     = button.colors;
+
+        newColorBlock.disabledColor = newColorBlock.normalColor = button.colors.pressedColor;
+        button.colors = newColorBlock;
+        yield return new WaitForSeconds(blinkSecondsDuration);
+        button.colors = initialColorBlock;
+
     }
 }

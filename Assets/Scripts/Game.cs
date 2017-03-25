@@ -8,6 +8,7 @@ public class Game
     private TransitionScreen transitionScreen;
     private List<int> currentSequence;
     private int difficulty = 1;
+    public bool IsStarted { get; private set; }
 
     public Game(GameScreen gameScreen, TransitionScreen transitionScreen)
     {
@@ -17,14 +18,22 @@ public class Game
 
     public void Start()
     {
+        if (IsStarted)
+            return;
+
+        IsStarted = true;
+        gameScreen.OnColorClicked += GameScreen_OnColorClicked;
         SetupNextSequence();
     }
 
     private void SetupNextSequence()
     {
         currentSequence = GetNewNextSequence(difficulty);
-        gameScreen.PlaySequence(currentSequence);
-        gameScreen.OnColorClicked += GameScreen_OnColorClicked;
+        gameScreen.EnableClick = false;
+        gameScreen.PlaySequence(currentSequence, ()=>
+        {
+            gameScreen.EnableClick = true;
+        });
     }
 
     private List<int> GetNewNextSequence(int sequenceLength)
