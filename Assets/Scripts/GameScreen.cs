@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public delegate void GameSceenColorClickEventHandler(GameScreen sender, int colorIdClicked);
 
-public class GameScreen : MonoBehaviour {
-
+public class GameScreen : CanvasScreen
+{
     [SerializeField] private List<Button> buttons = new List<Button>();
 
     public int ColorCount {

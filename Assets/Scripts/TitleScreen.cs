@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TitleScreen : MonoBehaviour
+public class TitleScreen : CanvasScreen
 {
     [SerializeField] private Button playButton;
     [SerializeField] private GameScreen gameScreen;
@@ -21,8 +21,14 @@ public class TitleScreen : MonoBehaviour
 
     private void PlayButton_OnClicked()
     {
-        gameObject.SetActive(false);
-        new Game(gameScreen, transitionScreen).Start();
+        CloseTransitToLeft();
+        transitionScreen.SetSequenceID(1);
+        transitionScreen.OpenTransitFromRight(() =>
+        {
+            transitionScreen.CloseTransitToLeft();
+            gameScreen.OpenTransitFromRight();
+            new Game(gameScreen, transitionScreen).Start();
+        });
     }
 
     private void OnDestroy()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Game
@@ -16,14 +17,14 @@ public class Game
 
     public void Start()
     {
-        NextSequence();
-        gameScreen.OnColorClicked += GameScreen_OnColorClicked;
+        SetupNextSequence();
     }
 
-    private void NextSequence()
+    private void SetupNextSequence()
     {
         currentSequence = GetNewNextSequence(++difficulty);
         gameScreen.PlaySequence(currentSequence);
+        gameScreen.OnColorClicked += GameScreen_OnColorClicked;
     }
 
     private List<int> GetNewNextSequence(int sequenceLength)
@@ -45,7 +46,7 @@ public class Game
             {
                 Debug.ClearDeveloperConsole();
                 Debug.Log("You WIN");
-                NextSequence();
+                transitionScreen.OpenShowSequenceAndClose(++difficulty, SetupNextSequence);
             }
         }
         else
