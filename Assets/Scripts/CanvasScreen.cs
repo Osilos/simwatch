@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CanvasScreen : MonoBehaviour
 {
-    [SerializeField] private float transitionDuration = 0.5f;
+    [SerializeField] private float transitionSecondsDuration = 0.2f;
 
     private Vector3 openedPosition;
 
@@ -17,7 +17,7 @@ public class CanvasScreen : MonoBehaviour
     {
         Open();
         transform.position = openedPosition + Vector3.right * Screen.width;
-        StartCoroutine(GoToPositionAndPerform(openedPosition, transitionDuration, actionOnEnd));
+        StartCoroutine(GoToPositionAndPerform(openedPosition, transitionSecondsDuration, actionOnEnd));
     }
 
     private IEnumerator GoToPositionAndPerform(Vector3 targetedPosition, float transitionDuration, Action actionOnEnd = null)
@@ -40,7 +40,7 @@ public class CanvasScreen : MonoBehaviour
 
     public void CloseTransitToLeft(Action actionOnEnd = null)
     {
-        StartCoroutine(GoToPositionAndPerform(openedPosition + Vector3.left * Screen.width, transitionDuration, ()=>
+        StartCoroutine(GoToPositionAndPerform(openedPosition + Vector3.left * Screen.width, transitionSecondsDuration, ()=>
         {
             Close();
 
