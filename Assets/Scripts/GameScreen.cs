@@ -9,8 +9,8 @@ public delegate void GameSceenColorClickEventHandler(GameScreen sender, int colo
 
 public class GameScreen : CanvasScreen
 {
-    [SerializeField] private List<Button> buttons = new List<Button>();
-    [SerializeField] private Button rotationButton;
+    [SerializeField] private List<ColorButton> buttons = new List<ColorButton>();
+    [SerializeField] private ColorButton rotationButton;
     [SerializeField] private Rotator rotator;
     [SerializeField] private float rotationSecondsDuration;
     [SerializeField] private float blinkSecondsDuration = 0.3f;
@@ -78,25 +78,13 @@ public class GameScreen : CanvasScreen
         if (isFirstSequence)
             yield return new WaitForSeconds(secondsDelayBeforeFirstSequence);
 
-        foreach (int index in sequence)
+        for (int i = 0; i < sequence.Count; i++)
         {
             yield return new WaitForSeconds(secondsDelayBetweenBlink);
-            yield return BlinkButton(buttons[index]);
+            yield return buttons[sequence[i]].Blink(i + 1 , blinkSecondsDuration);
         }
 
         if (actionOnEnd != null)
             actionOnEnd();
-    }
-
-    private IEnumerator BlinkButton (Button button)
-    {
-        ColorBlock initialColorBlock = button.colors;
-        ColorBlock newColorBlock     = button.colors;
-
-        newColorBlock.disabledColor = newColorBlock.normalColor = button.colors.pressedColor;
-        button.colors = newColorBlock;
-        yield return new WaitForSeconds(blinkSecondsDuration);
-        button.colors = initialColorBlock;
-
     }
 }
