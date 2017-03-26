@@ -26,17 +26,16 @@ public class Game
 
         IsStarted = true;
         gameScreen.OnColorClicked += GameScreen_OnColorClicked;
-        SetupNextSequence();
+        SetupNextSequence(true);
     }
 
-    private void SetupNextSequence()
+    private void SetupNextSequence(bool isFirstSequence = false)
     {
         currentSequence = GetNewNextSequence(difficulty);
         gameScreen.EnableClick = false;
-        gameScreen.PlaySequence(currentSequence, ()=>
-        {
+        gameScreen.PlaySequence(currentSequence, () => {
             gameScreen.EnableClick = true;
-        });
+        }, isFirstSequence);
     }
 
     private List<int> GetNewNextSequence(int sequenceLength)
@@ -63,7 +62,7 @@ public class Game
                 if (GetHighscore() < difficulty)
                     SetHighscore(difficulty);
 
-                transitionScreen.OpenShowSequenceAndClose(++difficulty, SetupNextSequence);
+                transitionScreen.OpenShowSequenceAndClose(++difficulty, ()=> { SetupNextSequence(); });
             }
         }
         else if (OnLoosed != null)

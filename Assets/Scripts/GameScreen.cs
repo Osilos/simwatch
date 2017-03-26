@@ -15,6 +15,8 @@ public class GameScreen : CanvasScreen
     [SerializeField] private float rotationSecondsDuration;
     [SerializeField] private float blinkSecondsDuration = 0.3f;
     [SerializeField] private GameObject error;
+    [SerializeField] private float secondsDelayBetweenBlink = 0.2f;
+    [SerializeField] private float secondsDelayBeforeFirstSequence = 0.4f;
 
     private bool _enableClick = true;
     public bool EnableClick
@@ -66,15 +68,21 @@ public class GameScreen : CanvasScreen
         });
     }
 
-    public void PlaySequence(List<int> sequence, Action actionOnEnd = null)
+    public void PlaySequence(List<int> sequence, Action actionOnEnd = null, bool isFirstSequence = false)
     {
-        StartCoroutine(PlaySequenceCoroutine(sequence, actionOnEnd));
+        StartCoroutine(PlaySequenceCoroutine(sequence, actionOnEnd, isFirstSequence));
     }
 
-    private IEnumerator PlaySequenceCoroutine(List<int> sequence, Action actionOnEnd = null)
+    private IEnumerator PlaySequenceCoroutine(List<int> sequence, Action actionOnEnd = null, bool isFirstSequence = false)
     {
+        if (isFirstSequence)
+            yield return new WaitForSeconds(secondsDelayBeforeFirstSequence);
+
         foreach (int index in sequence)
+        {
+            yield return new WaitForSeconds(secondsDelayBetweenBlink);
             yield return BlinkButton(buttons[index]);
+        }
 
         if (actionOnEnd != null)
             actionOnEnd();
@@ -82,7 +90,6 @@ public class GameScreen : CanvasScreen
 
     private IEnumerator BlinkButton (Button button)
     {
-        yield return new WaitForSeconds(0.2f);
         ColorBlock initialColorBlock = button.colors;
         ColorBlock newColorBlock     = button.colors;
 
